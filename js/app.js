@@ -16,6 +16,7 @@ const isLiked = (id) => {
 };
 
 const addToLiked = (id) => {
+  // Bug no. 01 (Instead of push it was written plus.)
     likedPostsId.push(id); 
     showPosts(posts);
 };
@@ -27,6 +28,7 @@ const reportPost = (id) => {
 };
 
 const displayContent = (text) => {
+  // Bug no. 03 (When the description is greater than 30 character it used to show only 'text'. Now it is solved.)
     return text.length < 30, text.slice(0, 30) + "<span class='fw-bold'>... read more</span>";
 };
 
@@ -39,6 +41,7 @@ const switchTab = (id) => {
         document.getElementById( "liked" ).style.display = "block";
         document.getElementById( "posts" ).style.display = "none";
         document.getElementById( "reported" ).style.display = "none";
+        // Bug no. 06 (Every time it used to increase the post which liked. Now whenever any user will click in liked, first it will clean the previous data & then it will show new liked posts.) 
         document.getElementById( "liked" ).textContent = "";
         displayLikedPosts();
     } else {
@@ -51,8 +54,9 @@ const switchTab = (id) => {
 };
 
 const createPost = (post) => {
-    const image = post.userImage;
-    const userImage = post.image;
+    // Bug no. 02 (In both image tag same variable was assigned. Now separated the variables and assigned indivisualy into two img element.)
+    const image = post.image;
+    const userImage = post.userImage;
     const div = document.createElement( "article" );
     div.classList.add( "post" );
     div.innerHTML = `
@@ -63,7 +67,7 @@ const createPost = (post) => {
                     target="_blank"
                     class="post__avatar"
                   >
-                    <img src="${image}" alt="User Picture" />
+                    <img src="${userImage}" alt="User Picture" />
                   </a>
                   <a href="#" class="post__user">phero</a>
                 </div>
@@ -77,7 +81,7 @@ const createPost = (post) => {
                 <div class="post__medias">
                   <img
                     class="post__media"
-                    src="${userImage}"
+                    src="${image}"
                     alt="Post Content"
                   />
                 </div>
@@ -131,6 +135,7 @@ const createPost = (post) => {
               </div>
       `;
     return div;
+    // Bug no. 04(In line no. 127 & 129 the user's name & user's comment was not showing because it was inside an array. After assigning the array with index it resolved.)
 };
 
 const showPosts = (posts) => {
@@ -153,6 +158,7 @@ const displayLikedPosts = () => {
 
 const displayReportedPosts = () => {
     const reportedPosts = getReportedPosts();
+    // Bug no. 05 (Instead of reportedPosts it was written posts below. So assigned it with reportedPosts so that it could run the loop on reportedPosts.)
     reportedPosts.forEach((post) => {
         const div = createPost(post);
         document.getElementById( "reported" ).appendChild(div);
@@ -160,7 +166,7 @@ const displayReportedPosts = () => {
 };
 
 const loadPosts = async () =>{
-  let data = await fetch('data/posts.json');
+  let data = await fetch('../data/posts.json');
   posts = await data.json();
   showPosts(posts);
 }
